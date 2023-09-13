@@ -27,6 +27,7 @@ runs:
             git checkout ${{ inputs.target-branch }}
             git checkout ${{ inputs.source-branch }}
           }
+        shell: bash
 
       - name: Setup .NET CLI
         uses: actions/setup-dotnet@v2
@@ -35,19 +36,23 @@ runs:
 
       - name: Install SKonsole
         run: dotnet tool install --global SKonsole --version 1.0.2
+        shell: bash
 
       - name: Generate PR description  
         id: generate_description
         run: |  
             skonsole pr description --targetBranch ${{ inputs.target-branch }} --outputFormat json --outputFile out.txt
+        shell: bash
 
       - name: Parse PR title
         id: parse_title
         run: echo "pr_title=$(jq -r '.Title' out.txt)" >> "$GITHUB_OUTPUT"
+        shell: bash
 
       - name: Parse PR summary
         id: parse_summary
         run: echo "pr_summary=$(jq -r '.Summary' out.txt)" >> "$GITHUB_OUTPUT"
+        shell: bash
 
       - name: Parse PR changes
         id: parse_changes
@@ -57,6 +62,7 @@ runs:
             echo "$(jq -r '.Changes[]' out.txt | while read line; do echo "- $line"; done)"
             echo EOF
           } >> "$GITHUB_OUTPUT"
+        shell: bash
 
       - name: Create-Update PR
         uses: k3rnels-actions/pr-update@v1
