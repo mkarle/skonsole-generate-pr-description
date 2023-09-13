@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'SKonsole Generate PR Description'
+description: 'Uses Microsoft SKonsole and Semantic Kernel to update a pull request with an AI generated description.'
 inputs:
   target-branch:
     description: "The branch that will be updated with the changes made in the pull request."
@@ -10,6 +10,10 @@ inputs:
   token:
     description: "The GitHub Token to use by this Action (e.g. secrets.GITHUB_TOKEN)"
     required: true
+  update-type:
+    description: "How to update the PR title/body. Options are 'suffix', 'prefix', and 'replace'. Defaults to 'suffix'"
+    required: false
+    default: suffix
 runs:
   using: "composite"
   steps:
@@ -65,7 +69,7 @@ runs:
         shell: bash
 
       - name: Create-Update PR
-        uses: k3rnels-actions/pr-update@v1
+        uses: mkarle/pr-update@v1
         id: pr_update
         with:
           token: ${{ inputs.token }}
@@ -73,9 +77,13 @@ runs:
           pr_source: ${{ inputs.source-branch }}
           pr_target: ${{ inputs.target-branch }}
           pr_body: |
+
             ## Summary
             ${{ steps.parse_summary.outputs.pr_summary }}
 
             ## Changes
             ${{ steps.parse_changes.outputs.pr_changes }}
-      
+
+            ---
+            *Powered by [Microsoft Semantic Kernel](https://github.com/microsoft/semantic-kernel)*
+          pr_update_type: ${{ inputs.update-type }}
