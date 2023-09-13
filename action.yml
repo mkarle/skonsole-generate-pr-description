@@ -8,7 +8,7 @@ inputs:
     description: "The branch that contains the changes that are being proposed in the pull request."
     required: true
   token:
-    description: "The GitHub Token to use by this Action (e.g. ${{ secrets.GITHUB_TOKEN }})"
+    description: "The GitHub Token to use by this Action (e.g. secrets.GITHUB_TOKEN)"
     required: true
 runs:
   using: "composite"
