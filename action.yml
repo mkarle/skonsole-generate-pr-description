@@ -7,6 +7,9 @@ inputs:
   source-branch:
     description: "The branch that contains the changes that are being proposed in the pull request."
     required: true
+  token:
+    description: "The GitHub Token to use by this Action (e.g. ${{ secrets.GITHUB_TOKEN }})"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -15,7 +18,7 @@ runs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source-branch }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ inputs.token }}
           fetch-depth: 0
 
       - name: Checkout branches
@@ -37,10 +40,6 @@ runs:
         id: generate_description
         run: |  
             skonsole pr description --targetBranch ${{ inputs.target-branch }} --outputFormat json --outputFile out.txt
-        #env: # Set Azure credentials secret as an input
-        #  AZURE_OPENAI_CHAT_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_CHAT_DEPLOYMENT_NAME }}
-        #  AZURE_OPENAI_API_ENDPOINT: ${{ secrets.AZURE_OPENAI_API_ENDPOINT }}
-        #  AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
 
       - name: Parse PR title
         id: parse_title
@@ -63,7 +62,7 @@ runs:
         uses: k3rnels-actions/pr-update@v1
         id: pr_update
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ inputs.token }}
           pr_title:  ${{ steps.parse_title.outputs.pr_title}}
           pr_source: ${{ inputs.source-branch }}
           pr_target: ${{ inputs.target-branch }}
