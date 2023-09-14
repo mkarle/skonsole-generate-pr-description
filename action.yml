@@ -76,8 +76,9 @@ runs:
           pr_title:  ${{ steps.parse_title.outputs.pr_title}}
           pr_source: ${{ inputs.source-branch }}
           pr_target: ${{ inputs.target-branch }}
+          pr_update_type: ${{ inputs.update-type }}
           pr_body:
-            ---
+
             ## Summary
             ${{ steps.parse_summary.outputs.pr_summary }}
 
@@ -86,4 +87,3 @@ runs:
 
             ---
             *Powered by [Microsoft Semantic Kernel](https://github.com/microsoft/semantic-kernel)*
-          pr_update_type: ${{ inputs.update-type }}
