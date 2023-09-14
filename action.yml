@@ -78,7 +78,6 @@ runs:
           pr_target: ${{ inputs.target-branch }}
           pr_update_type: ${{ inputs.update-type }}
           pr_body: |
-            ---
             ## Summary
             ${{ steps.parse_summary.outputs.pr_summary }}
 
