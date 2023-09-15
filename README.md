@@ -31,7 +31,12 @@ This action accepts the following inputs:
 
 - **source-branch** (*required*): The branch that contains the changes that are being proposed in the pull request.
 
+- **source-branch-url**: The URL of the source branch. **Required** if the branch is in a different repository from the target-branch.
+
+- **pull-request-number** (*required*): The pull request number.
+
 - **token** (*required*): The GitHub Token to use by this Action (e.g. secrets.GITHUB_TOKEN)
+
 - **update-type**: How to update the PR title/body. Options are `suffix`, `prefix`, and `replace`. Defaults to `suffix`
 
 You will need to set these environment variables:
