@@ -21,13 +21,13 @@ runs:
           dotnet-version: 7.0.x
 
       - name: Install SKonsole
-        run: dotnet tool install --global SKonsole --version 1.0.2
+        run: dotnet tool install --global SKonsole --version 1.0.3
         shell: bash
 
       - name: Generate PR description  
         id: generate_description
         run: |  
-            skonsole pr description --outputFormat json --outputFile out.txt --diffFile
+            skonsole pr description --outputFormat json --outputFile out.txt --diffInputFile ${{ inputs.pull-request-diff-url }}
         shell: bash
 
       - name: Parse PR title
