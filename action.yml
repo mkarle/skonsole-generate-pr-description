@@ -21,7 +21,7 @@ runs:
           dotnet-version: 7.0.x
 
       - name: Install SKonsole
-        run: dotnet tool install --global SKonsole --version 1.0.3
+        run: dotnet tool install --global SKonsole --version 1.0.4
         shell: bash
 
       - name: Generate PR description  
