@@ -1,17 +1,11 @@
 name: 'SKonsole Generate PR Description'
 description: 'Uses Microsoft SKonsole and Semantic Kernel to update a pull request with an AI generated description.'
 inputs:
-  target-branch:
-    description: "The branch that will be updated with the changes made in the pull request."
-    required: true
-  source-branch:
-    description: "The branch that contains the changes that are being proposed in the pull request."
-    required: true
-  source-branch-url:
-    description: "The URL of the source branch. Required if the branch is in a different repo from the target-branch."
   pull-request-number: 
     description: "The pull request number."
     required: true
+  pull-request-diff-url:
+    description: "The URL for the diff file of the pull request (e.g. github.event.pull_request.diff_url or github.event.issue.pull_request.diff_url)"
   token:
     description: "The GitHub Token to use by this Action (e.g. secrets.GITHUB_TOKEN)"
     required: true
@@ -21,25 +15,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-
-      - name: Check out repo
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.target-branch }}
-          token: ${{ inputs.token }}
-          fetch-depth: 0
-
-      - name: Checkout branches
-        run: |
-          if [ -z "${{inputs.source-branch-url}}" ]; then
-            git checkout ${{inputs.source-branch}}
-          else
-            git remote add downstream ${{inputs.source-branch-url}}
-            git fetch downstream
-            git checkout downstream/${{inputs.source-branch}}
-          fi
-        shell: bash
-
       - name: Setup .NET CLI
         uses: actions/setup-dotnet@v2
         with:
@@ -52,7 +27,7 @@ runs:
       - name: Generate PR description  
         id: generate_description
         run: |  
-            skonsole pr description --targetBranch ${{ inputs.target-branch }} --outputFormat json --outputFile out.txt
+            skonsole pr description --outputFormat json --outputFile out.txt --diffFile
         shell: bash
 
       - name: Parse PR title
@@ -81,8 +56,6 @@ runs:
         with:
           token: ${{ inputs.token }}
           pr_title:  ${{ steps.parse_title.outputs.pr_title}}
-          pr_source: ${{ inputs.source-branch }}
-          pr_target: ${{ inputs.target-branch }}
           pr_number: ${{ inputs.pull-request-number }}
           pr_update_type: ${{ inputs.update-type }}
           pr_body: |
